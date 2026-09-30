@@ -18,3 +18,7 @@ form{display:grid;gap:14px}form label:not(.consent){display:grid;gap:5px}input,t
 
 @media(min-width:901px){.hero-name{left:32%;width:36%}}
 @media(min-width:561px) and (max-width:900px){.feature h2{font-size:14px}}
+@media(min-width:561px) and (max-width:900px){.features{grid-template-columns:repeat(6,minmax(0,1fr))}.feature{grid-column:span 2}.feature:nth-child(n+4){grid-column:span 3}.feature h2{font-size:20px}}
+
+.brand-knot{width:50px;height:45px;flex-shrink:0}footer .brand-knot{width:36px;height:32px}.edge{position:absolute;width:19px;height:100%;top:0;pointer-events:none}.edge-left{left:-8px}.edge-right{right:-8px}.overview:before,.overview:after{display:none}.parchment{background-image:url('../images/design/grain.svg'),radial-gradient(ellipse at 50% 45%,#f6e6c4,#d2b281 87%,#a77e49)}.quote-panel{background-position:87% center}
+@media(max-width:1150px){.edge{display:none}.brand-knot{width:32px;height:38px}}
