@@ -1,0 +1,20 @@
+[
+  {
+    "id": "herbstfest",
+    "date": "2025-10-25",
+    "title": "Herbstfest der Hravenhaim Sippe",
+    "location": "Langhaus – Hravenhaim"
+  },
+  {
+    "id": "wintersonnenwende",
+    "date": "2025-11-15",
+    "title": "Ritual der Wintersonnenwende",
+    "location": "Waldlichtung"
+  },
+  {
+    "id": "weihnachtsmarkt",
+    "date": "2025-12-12",
+    "title": "Weihnachtsmarkt",
+    "location": "Marktplatz – Essen"
+  }
+]

@@ -1,11 +1,38 @@
-
+'use strict';
 document.addEventListener('DOMContentLoaded', () => {
-  const btn = document.querySelector('.menuBtn'), menu = document.querySelector('.menu');
-  if (btn) btn.addEventListener('click', () => menu.classList.toggle('open'));
-  document.querySelectorAll('.menu a').forEach(a => { if (a.pathname === location.pathname) a.classList.add('active') });
-  document.querySelectorAll('[data-gallery] img').forEach(img => img.addEventListener('click', () => {
-    const m = document.querySelector('#image-modal'); if (!m) return; m.querySelector('img').src = img.src; m.classList.add('open');
-  }));
-  const modal = document.querySelector('#image-modal'); if (modal) modal.addEventListener('click', e => { if (e.target === modal || e.target.closest('.close')) modal.classList.remove('open') });
-  document.querySelectorAll('[data-year]').forEach(x => x.textContent = new Date().getFullYear());
+  const menu = document.querySelector('.menu'), menuButton = document.querySelector('.menuBtn');
+  const closeMenu = () => { menu?.classList.remove('open'); menuButton?.setAttribute('aria-expanded','false'); };
+  menuButton?.addEventListener('click', () => { const open=menu.classList.toggle('open'); menuButton.setAttribute('aria-expanded',String(open)); menuButton.setAttribute('aria-label',open?'Menü schließen':'Menü öffnen'); });
+  document.addEventListener('keydown',event=>{if(event.key==='Escape')closeMenu();});
+  document.addEventListener('click',event=>{if(!event.target.closest('.topbar'))closeMenu();});
+  const current=location.pathname.split('/').pop()||'index.html';
+  document.querySelectorAll('.menu a').forEach(link=>{if(link.getAttribute('href')===current){link.classList.add('active');link.setAttribute('aria-current','page');}link.addEventListener('click',closeMenu);});
+  const dialog=document.querySelector('#image-modal'), images=[...document.querySelectorAll('[data-gallery]')];
+  let selected=0,opener=null;
+  function showImage(index){selected=(index+images.length)%images.length;const item=images[selected],source=item.querySelector('img');dialog.querySelector('figure img').src=source.src;dialog.querySelector('figure img').alt=source.alt;dialog.querySelector('figcaption').textContent=source.alt;}
+  images.forEach((item,index)=>item.addEventListener('click',()=>{opener=item;showImage(index);dialog.showModal();}));
+  dialog?.querySelector('.close').addEventListener('click',()=>dialog.close());
+  dialog?.querySelector('.previous').addEventListener('click',()=>showImage(selected-1));
+  dialog?.querySelector('.next').addEventListener('click',()=>showImage(selected+1));
+  dialog?.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close();}});
+  dialog?.addEventListener('keydown',event=>{if(event.key==='ArrowRight'){event.preventDefault();showImage(selected+1);}if(event.key==='ArrowLeft'){event.preventDefault();showImage(selected-1);}});
+  dialog?.addEventListener('close',()=>opener?.focus());
+  const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const asDate=s=>new Date(s+'T12:00:00');
+  const dateParts=s=>{const date=asDate(s);return [date.getDate(),date.toLocaleDateString('de-DE',{month:'short'}).replace('.',''),date.getFullYear()];};
+  if(document.querySelector('[data-events], [data-calendar]')) fetch('events.json').then(r=>{if(!r.ok)throw Error();return r.json();}).then(events=>{
+    document.querySelectorAll('[data-events]').forEach(container=>{container.innerHTML=events.map(event=>{const [day,month,year]=dateParts(event.date);return `<article class="event-row"><time class="datebox" datetime="${escape(event.date)}"><strong>${day}</strong><span>${month}</span><span>${year}</span></time><div><h3>${escape(event.title)}</h3><p>${escape(event.location)}</p><a href="events.html#${escape(event.id)}">Mehr erfahren →</a></div></article>`;}).join('');});
+    const calendar=document.querySelector('[data-calendar]');if(!calendar)return;
+    let view=asDate(events[0]?.date||new Date().toISOString().slice(0,10)),chosen=events[0]?.date||'';
+    const grid=calendar.querySelector('.calendar-grid'),heading=calendar.querySelector('[data-month]'),detail=calendar.querySelector('.calendar-detail');
+    const key=date=>`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
+    function render(){heading.textContent=view.toLocaleDateString('de-DE',{month:'long',year:'numeric'});grid.innerHTML=['Mo','Di','Mi','Do','Fr','Sa','So'].map(d=>`<span aria-hidden="true">${d}</span>`).join('');const first=new Date(view.getFullYear(),view.getMonth(),1),offset=(first.getDay()+6)%7,days=new Date(view.getFullYear(),view.getMonth()+1,0).getDate();for(let i=0;i<offset;i++){const blank=document.createElement('span');grid.append(blank);}for(let day=1;day<=days;day++){const date=new Date(view.getFullYear(),view.getMonth(),day),dateKey=key(date),matches=events.filter(event=>event.date===dateKey),button=document.createElement('button');button.type='button';button.className='calendar-day'+(matches.length?' has-event':'')+(chosen===dateKey?' selected':'')+(key(new Date())===dateKey?' today':'');button.setAttribute('aria-label',date.toLocaleDateString('de-DE',{dateStyle:'full'})+(matches.length?': '+matches.map(e=>e.title).join(', '):''));button.setAttribute('aria-pressed',String(chosen===dateKey));button.innerHTML=`${day}${matches.map(e=>`<small>${escape(e.title)}</small>`).join('')}`;button.addEventListener('click',()=>{chosen=dateKey;render();[...grid.querySelectorAll('button')].find(b=>b.getAttribute('aria-pressed')==='true')?.focus();});grid.append(button);}const matches=events.filter(event=>event.date===chosen);detail.innerHTML=matches.length?matches.map(e=>`<h3><a href="events.html#${escape(e.id)}">${escape(e.title)} →</a></h3><p>${escape(e.location)}</p>`).join(''):'<p>Für diesen Tag sind keine Termine eingetragen.</p>';}
+    calendar.querySelector('[data-prev]').addEventListener('click',()=>{view=new Date(view.getFullYear(),view.getMonth()-1,1);chosen='';render();});calendar.querySelector('[data-next]').addEventListener('click',()=>{view=new Date(view.getFullYear(),view.getMonth()+1,1);chosen='';render();});calendar.querySelector('[data-today]').addEventListener('click',()=>{view=new Date();chosen=key(view);render();});render();
+  }).catch(()=>{document.querySelectorAll('[data-events]').forEach(el=>el.innerHTML='<p>Termine konnten nicht geladen werden. <a href="events.html">Zur Eventübersicht</a></p>');document.querySelectorAll('[data-calendar]').forEach(el=>el.innerHTML='<p>Der Kalender konnte nicht geladen werden. <a href="events.html">Termine ansehen</a></p>');});
+  document.querySelectorAll('[data-contact]').forEach(form=>{
+    const status=form.querySelector('.form-status'),button=form.querySelector('[type=submit]');let pending=false;
+    const token=async()=>{const response=await fetch('session.php',{credentials:'same-origin',cache:'no-store'});if(!response.ok)throw Error('session');const data=await response.json();form.elements.csrf.value=data.csrf;};
+    token().catch(()=>{status.textContent='Bitte öffne das Kontaktformular, um uns zu schreiben.';const link=document.createElement('a');link.href='kontakt.php';link.textContent=' Zum Kontaktformular →';status.append(link);});
+    form.addEventListener('submit',async event=>{event.preventDefault();if(pending)return;pending=true;button.disabled=true;status.className='form-status';status.textContent='Nachricht wird übermittelt …';try{if(!form.elements.csrf.value)await token();const response=await fetch('kontakt.php',{method:'POST',body:new FormData(form),headers:{Accept:'application/json'}});const result=await response.json();status.textContent=result.message;status.className='form-status '+(result.ok?'success':'error');if(result.stored){form.reset();await token();}}catch{status.textContent='Die Übermittlung konnte nicht bestätigt werden. Bitte prüfe deine Verbindung und versuche es später erneut.';status.className='form-status error';}finally{pending=false;button.disabled=false;}});
+  });
 });
