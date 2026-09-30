@@ -1,0 +1,1663 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=MedievalSharp&family=Roboto:wght@300;400;500;700&display=swap');
+
+
+/* =========================================================
+   HRAVENHAIM SIPPE
+   MAIN CSS
+========================================================= */
+
+
+/* =========================================================
+   GRUNDVARIABLEN
+========================================================= */
+*{
+    margin: 0;
+}
+
+:root {
+
+    --bg: #4c3d25;
+
+    --panel: #3a332b;
+
+    --panel2: #3b2817;
+
+    --gold: #c59a58;
+
+    --gold2: #e4c487;
+
+    --text: #eee4d0;
+
+    --muted: #b9aa91;
+
+    --line: #654a2b;
+
+    --red: #702a20;
+
+    --ok: #627a52;
+
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+
+html {
+    scroll-behavior: smooth;
+}
+
+
+body {
+
+    margin: 0;
+
+    background:
+
+        radial-gradient(
+            circle at 10% 0%,
+            #412a17 0,
+            transparent 28%
+        ),
+
+        linear-gradient(
+            135deg,
+            #070605,
+            #15100b 50%,
+            #080706
+        );
+
+    color: var(--text);
+
+    font:
+        400 16px/1.65
+        Roboto,
+        Arial,
+        sans-serif;
+}
+
+
+/* =========================================================
+   TEXTUR
+========================================================= */
+
+body:before {
+
+    content: "";
+
+    position: fixed;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    opacity: .07;
+
+    background-image:
+        radial-gradient(
+            #fff .55px,
+            transparent .55px
+        );
+
+    background-size: 5px 5px;
+
+}
+
+
+/* =========================================================
+   LINKS
+========================================================= */
+
+a {
+
+    color: inherit;
+
+    text-decoration: none;
+
+}
+
+
+img {
+
+    max-width: 100%;
+
+    display: block;
+
+}
+
+
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.container {
+
+    width: min(
+        1180px,
+        92%
+    );
+
+    margin: auto;
+
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+.topbar {
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 100;
+
+    background:
+        rgba(74, 62, 38, 0.97);
+
+    border-bottom:
+        1px solid
+        var(--line);
+
+    box-shadow:
+        0 5px 24px #000;
+
+}
+
+
+.nav {
+
+    min-height: 76px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+}
+
+
+.brand {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-right: auto;
+
+}
+
+
+.brand img {
+
+    width: 270px;
+
+    height: 80px;
+
+    object-fit: contain;
+
+}
+
+
+.brand span {
+
+    font:
+        800 1rem
+        Cinzel;
+
+    letter-spacing: 1.7px;
+
+    color:
+        var(--gold2);
+
+    line-height: 1.05;
+
+}
+
+
+/* =========================================================
+   MENÜ
+========================================================= */
+
+.menu {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 2px;
+
+}
+
+
+.menu a {
+
+    padding:
+        25px 9px;
+
+    font:
+        600 .75rem
+        Cinzel;
+
+    color:
+        #d7c6a5;
+
+    position: relative;
+
+}
+
+
+.menu a:hover,
+.menu a.active {
+
+    color: #fff;
+
+}
+
+
+.menu a:after {
+
+    content: "";
+
+    position: absolute;
+
+    left: 9px;
+
+    right: 9px;
+
+    bottom: 16px;
+
+    height: 2px;
+
+    background:
+        var(--gold);
+
+    transform:
+        scaleX(0);
+
+    transition:
+        .2s;
+
+}
+
+
+.menu a:hover:after,
+.menu a.active:after {
+
+    transform:
+        scaleX(1);
+
+}
+
+
+/* =========================================================
+   MOBILE MENÜ
+========================================================= */
+
+.menuBtn {
+
+    display: none;
+
+    background: none;
+
+    border:
+        1px solid
+        var(--line);
+
+    color:
+        var(--gold2);
+
+    font-size: 1.4rem;
+
+    padding: 8px 11px;
+
+    cursor: pointer;
+
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero {
+
+    min-height: 640px;
+
+    display: grid;
+
+    place-items: center;
+
+    text-align: center;
+
+    position: relative;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            rgba(0,0,0,.84),
+            rgba(0,0,0,.25),
+            rgba(0,0,0,.86)
+        ),
+
+        url('../images/hero-viking.png')
+        center/
+        cover;
+
+}
+
+
+.hero:before {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 18px;
+
+    border:
+        1px solid
+        #b98b4d77;
+
+}
+
+
+.hero-inner {
+
+    position: relative;
+
+    z-index: 2;
+
+    max-width: 850px;
+
+    padding:
+        70px 20px;
+
+}
+
+
+.kicker {
+
+    font:
+        700 .82rem
+        Cinzel;
+
+    letter-spacing: 3px;
+
+    color:
+        var(--gold2);
+
+    text-transform:
+        uppercase;
+
+}
+
+
+.hero h1 {
+
+    font:
+        800 clamp(
+            3rem,
+            8vw,
+            6.7rem
+        )
+        MedievalSharp,
+        Cinzel;
+
+    margin:
+        12px 0;
+
+    color:
+        #f2e5c7;
+
+    text-shadow:
+        0 6px 25px #000;
+
+}
+
+
+.hero p {
+
+    font:
+        500 clamp(
+            1rem,
+            2vw,
+            1.3rem
+        )
+        Cinzel;
+
+    color:
+        #ead9b8;
+
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.btn {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding:
+        11px 21px;
+
+    border:
+        1px solid
+        var(--gold);
+
+    background:
+        linear-gradient(
+            #422a18,
+            #1c1109
+        );
+
+    color:
+        #f1ddb4;
+
+    font:
+        700 .8rem
+        Cinzel;
+
+    letter-spacing: .6px;
+
+    cursor: pointer;
+
+    transition: .2s;
+
+}
+
+
+.btn:hover {
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 10px 25px #000;
+
+}
+
+
+.btn.secondary {
+
+    border-color:
+        #60482d;
+
+    background:
+        #14100c;
+
+}
+
+
+/* =========================================================
+   SECTIONS
+========================================================= */
+
+.section {
+
+    padding:
+        78px 0;
+
+}
+
+
+.dark {
+
+    border-block:
+        1px solid
+        #60472b55;
+
+    background:
+        #ffffff03;
+
+}
+
+
+/* =========================================================
+   SECTION TITEL
+========================================================= */
+
+.section-title {
+
+    text-align: center;
+
+    max-width: 780px;
+
+    margin:
+        0 auto 40px;
+
+}
+
+
+.section-title h2,
+.page-hero h1 {
+
+    font:
+        800 clamp(
+            2.2rem,
+            5vw,
+            4rem
+        )
+        MedievalSharp,
+        Cinzel;
+
+    color:
+        var(--gold2);
+
+    margin:
+        4px 0;
+
+}
+
+
+.section-title p,
+.page-hero p {
+
+    color:
+        var(--muted);
+
+}
+
+
+.meta {
+
+    font:
+        700 .82rem
+        Cinzel;
+
+    letter-spacing:
+        3px;
+
+    color:
+        var(--gold2);
+
+    text-transform:
+        uppercase;
+
+}
+
+
+/* =========================================================
+   GRID
+========================================================= */
+
+.grid {
+
+    display: grid;
+
+    gap: 22px;
+
+}
+
+
+.grid-2 {
+
+    grid-template-columns:
+        repeat(
+            2,
+            1fr
+        );
+
+}
+
+
+.grid-3 {
+
+    grid-template-columns:
+        repeat(
+            3,
+            1fr
+        );
+
+}
+
+
+.grid-4 {
+
+    grid-template-columns:
+        repeat(
+            4,
+            1fr
+        );
+
+}
+
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.card {
+
+    background:
+
+        linear-gradient(
+            145deg,
+            #2a1c11dd,
+            #100d0aee
+        );
+
+    border:
+        1px solid
+        var(--line);
+
+    padding:
+        24px;
+
+    box-shadow:
+        0 18px 45px #0008;
+
+    position: relative;
+
+}
+
+
+.card:before {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 7px;
+
+    border:
+        1px solid
+        #c59a581f;
+
+    pointer-events: none;
+
+}
+
+
+.card h3 {
+
+    font:
+        700 1.2rem
+        Cinzel;
+
+    color:
+        var(--gold2);
+
+    margin:
+        0 0 7px;
+
+}
+
+
+.card p {
+
+    color:
+        #c9baa2;
+
+}
+
+
+/* =========================================================
+   FEATURE CARDS
+========================================================= */
+
+.feature {
+
+    min-height:
+        220px;
+
+    padding:
+        25px;
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    justify-content:
+        flex-end;
+
+    background-position:
+        center;
+
+    background-size:
+        cover;
+
+    overflow:
+        hidden;
+
+}
+
+
+.feature:after {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            transparent 15%,
+            #000e
+        );
+
+}
+
+
+.feature > * {
+
+    position:
+        relative;
+
+    z-index: 1;
+
+}
+
+
+/* =========================================================
+   PERSONEN
+========================================================= */
+
+.person {
+
+    padding: 0;
+
+    overflow: hidden;
+
+}
+
+
+.person img {
+
+    height:
+        300px;
+
+    width: 100%;
+
+    object-fit:
+        cover;
+
+    filter:
+        saturate(.75);
+
+}
+
+
+.person .content {
+
+    padding:
+        21px;
+
+}
+
+
+/* =========================================================
+   PAGE HERO
+========================================================= */
+
+.page-hero {
+
+    padding:
+        90px 0;
+
+    text-align:
+        center;
+
+    background:
+
+        linear-gradient(
+            #050403bb,
+            #050403e8
+        ),
+
+        url('../images/hero-viking.png')
+        center/
+        cover;
+
+    border-bottom:
+        1px solid
+        var(--line);
+
+}
+
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+.profile {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        350px 1fr;
+
+    gap:
+        40px;
+
+    align-items:
+        start;
+
+}
+
+
+.profile img {
+
+    border:
+        1px solid
+        var(--line);
+
+    padding:
+        7px;
+
+    background:
+        #0c0907;
+
+}
+
+
+.profile h2 {
+
+    font:
+        800 2.6rem
+        MedievalSharp;
+
+    color:
+        var(--gold2);
+
+    margin-top:
+        0;
+
+}
+
+
+/* =========================================================
+   ZITAT
+========================================================= */
+
+.quote {
+
+    font:
+        500 1.1rem
+        Cinzel;
+
+    color:
+        #dfc38d;
+
+    text-align:
+        center;
+
+    border-block:
+        1px solid
+        var(--line);
+
+    padding:
+        25px;
+
+    margin:
+        25px 0;
+
+}
+
+
+/* =========================================================
+   EVENTS
+========================================================= */
+
+.event {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        82px 1fr auto;
+
+    gap:
+        18px;
+
+    align-items:
+        center;
+
+}
+
+
+.datebox {
+
+    border:
+        1px solid
+        var(--gold);
+
+    text-align:
+        center;
+
+    background:
+        #21160c;
+
+    padding:
+        9px;
+
+}
+
+
+.datebox strong {
+
+    display:
+        block;
+
+    font:
+        800 1.6rem
+        Cinzel;
+
+    color:
+        var(--gold2);
+
+    line-height:
+        1;
+
+}
+
+
+.datebox span {
+
+    font-size:
+        .7rem;
+
+    color:
+        #cdbb99;
+
+}
+
+
+/* =========================================================
+   GALERIE
+========================================================= */
+
+.gallery {
+
+    columns:
+        3 250px;
+
+    column-gap:
+        18px;
+
+}
+
+
+.gallery figure {
+
+    break-inside:
+        avoid;
+
+    margin:
+        0 0 18px;
+
+    position:
+        relative;
+
+}
+
+
+.gallery img {
+
+    width:
+        100%;
+
+    border:
+        1px solid
+        var(--line);
+
+    padding:
+        5px;
+
+    background:
+        #0d0a07;
+
+    cursor:
+        pointer;
+
+    transition:
+        .2s;
+
+}
+
+
+.gallery img:hover {
+
+    filter:
+        brightness(1.12);
+
+    transform:
+        scale(1.01);
+
+}
+
+
+.gallery figcaption {
+
+    position:
+        absolute;
+
+    bottom:
+        7px;
+
+    left:
+        7px;
+
+    right:
+        7px;
+
+    padding:
+        8px;
+
+    background:
+        linear-gradient(
+            transparent,
+            #000d
+        );
+
+    font:
+        600 .75rem
+        Cinzel;
+
+}
+
+
+/* =========================================================
+   PARTNER
+========================================================= */
+
+.partner {
+
+    display:
+        flex;
+
+    gap:
+        18px;
+
+    align-items:
+        center;
+
+}
+
+
+.partner-logo {
+
+    width:
+        90px;
+
+    height:
+        90px;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    border:
+        1px solid
+        var(--line);
+
+    background:
+        #0b0907;
+
+    color:
+        var(--gold);
+
+    font:
+        700 .7rem
+        Cinzel;
+
+}
+
+
+/* =========================================================
+   BÜCHER
+========================================================= */
+
+.book img {
+
+    height:
+        245px;
+
+    width:
+        100%;
+
+    object-fit:
+        cover;
+
+    border:
+        1px solid
+        var(--line);
+
+}
+
+
+/* =========================================================
+   FORMULARE
+========================================================= */
+
+form {
+
+    display:
+        grid;
+
+    gap:
+        15px;
+
+}
+
+
+label {
+
+    font:
+        600 .78rem
+        Cinzel;
+
+    color:
+        var(--gold2);
+
+}
+
+
+input,
+textarea,
+select {
+
+    width:
+        100%;
+
+    padding:
+        12px;
+
+    background:
+        #0b0907;
+
+    border:
+        1px solid
+        #5b4328;
+
+    color:
+        #eee;
+
+    outline:
+        none;
+
+    font:
+        400 1rem
+        Roboto;
+
+}
+
+
+input:focus,
+textarea:focus {
+
+    border-color:
+        var(--gold);
+
+}
+
+
+textarea {
+
+    min-height:
+        150px;
+
+    resize:
+        vertical;
+
+}
+
+
+.check {
+
+    display:
+        flex;
+
+    gap:
+        9px;
+
+    color:
+        var(--muted);
+
+    font:
+        400 .88rem
+        Roboto;
+
+}
+
+
+.check input {
+
+    width:
+        auto;
+
+    margin-top:
+        6px;
+
+}
+
+
+/* =========================================================
+   HINWEISE
+========================================================= */
+
+.notice {
+
+    padding:
+        14px 17px;
+
+    background:
+        #18120c;
+
+    border:
+        1px solid
+        var(--line);
+
+    color:
+        #cfbea0;
+
+}
+
+
+.success {
+
+    border-color:
+        #627a52;
+
+    background:
+        #182015;
+
+    color:
+        #cfe0c3;
+
+}
+
+
+.error {
+
+    border-color:
+        #8a3b30;
+
+    background:
+        #21100d;
+
+    color:
+        #efc0b8;
+
+}
+
+
+/* =========================================================
+   GÄSTEBUCH
+========================================================= */
+
+.guest {
+
+    border-left:
+        3px solid
+        var(--gold);
+
+    padding:
+        13px 18px;
+
+    background:
+        #17120e;
+
+    margin-bottom:
+        14px;
+
+}
+
+
+.guest strong {
+
+    font:
+        700 .95rem
+        Cinzel;
+
+    color:
+        var(--gold2);
+
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer {
+
+    border-top:
+        1px solid
+        var(--line);
+
+    background:
+        #080705;
+
+    padding:
+        40px 0;
+
+    color:
+        #9f927e;
+
+}
+
+
+.footer-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        2fr 1fr 1fr;
+
+    gap:
+        35px;
+
+}
+
+
+footer h3 {
+
+    font:
+        700 1rem
+        Cinzel;
+
+    color:
+        var(--gold2);
+
+}
+
+
+.copyright {
+
+    text-align:
+        center;
+
+    border-top:
+        1px solid
+        #241b12;
+
+    margin-top:
+        30px;
+
+    padding-top:
+        20px;
+
+    font-size:
+        .8rem;
+
+}
+
+
+/* =========================================================
+   GALERIE MODAL
+========================================================= */
+
+.modal {
+
+    position:
+        fixed;
+
+    inset:
+        0;
+
+    background:
+        #000e;
+
+    z-index:
+        200;
+
+    display:
+        none;
+
+    place-items:
+        center;
+
+    padding:
+        20px;
+
+}
+
+
+.modal.open {
+
+    display:
+        grid;
+
+}
+
+
+.modal-box {
+
+    width:
+        min(
+            900px,
+            100%
+        );
+
+    max-height:
+        90vh;
+
+    overflow:
+        auto;
+
+    background:
+        #100d09;
+
+    border:
+        1px solid
+        var(--gold);
+
+    padding:
+        25px;
+
+    position:
+        relative;
+
+}
+
+
+.modal-box img {
+
+    max-height:
+        70vh;
+
+    width:
+        100%;
+
+    object-fit:
+        contain;
+
+}
+
+
+.close {
+
+    position:
+        absolute;
+
+    right:
+        10px;
+
+    top:
+        3px;
+
+    background:
+        none;
+
+    border:
+        0;
+
+    color:
+        #fff;
+
+    font-size:
+        2rem;
+
+    cursor:
+        pointer;
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width:1050px) {
+
+    .menu {
+
+        display:
+            none;
+
+    }
+
+
+    .menu.open {
+
+        display:
+            flex;
+
+        position:
+            absolute;
+
+        left:
+            0;
+
+        right:
+            0;
+
+        top:
+            76px;
+
+        background:
+            #090806;
+
+        flex-direction:
+            column;
+
+        padding:
+            12px;
+
+        border-bottom:
+            1px solid
+            var(--line);
+
+    }
+
+
+    .menuBtn {
+
+        display:
+            block;
+
+    }
+
+
+    .menu a {
+
+        padding:
+            11px;
+
+    }
+
+
+    .menu a:after {
+
+        bottom:
+            4px;
+
+    }
+
+
+    .grid-4 {
+
+        grid-template-columns:
+            repeat(
+                2,
+                1fr
+            );
+
+    }
+
+}
+
+
+/* =========================================================
+   SMARTPHONE
+========================================================= */
+
+@media (max-width:760px) {
+
+    .grid-2,
+    .grid-3,
+    .grid-4,
+    .profile,
+    .footer-grid {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+
+    .event {
+
+        grid-template-columns:
+            68px 1fr;
+
+    }
+
+
+    .event .btn {
+
+        grid-column:
+            2;
+
+    }
+
+
+    .hero {
+
+        min-height:
+            540px;
+
+    }
+
+
+    .section {
+
+        padding:
+            58px 0;
+
+    }
+
+
+    .brand span {
+
+        font-size:
+            .82rem;
+
+    }
+
+}

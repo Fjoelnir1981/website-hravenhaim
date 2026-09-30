@@ -1,0 +1,9 @@
+data/*
+!data/.htaccess
+.env
+.env.*
+!.env.example
+config.local.php
+vendor/
+.DS_Store
+*.log
