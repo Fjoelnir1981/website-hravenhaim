@@ -1,7 +1,7 @@
 'use strict';
 document.addEventListener('DOMContentLoaded', () => {
   const menu = document.querySelector('.menu'), menuButton = document.querySelector('.menuBtn');
-  const closeMenu = () => { menu?.classList.remove('open'); menuButton?.setAttribute('aria-expanded','false'); };
+  const closeMenu = () => { menu?.classList.remove('open'); menuButton?.setAttribute('aria-expanded','false'); menuButton?.setAttribute('aria-label','Menü öffnen'); };
   menuButton?.addEventListener('click', () => { const open=menu.classList.toggle('open'); menuButton.setAttribute('aria-expanded',String(open)); menuButton.setAttribute('aria-label',open?'Menü schließen':'Menü öffnen'); });
   document.addEventListener('keydown',event=>{if(event.key==='Escape')closeMenu();});
   document.addEventListener('click',event=>{if(!event.target.closest('.topbar'))closeMenu();});
@@ -21,7 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const asDate=s=>new Date(s+'T12:00:00');
   const dateParts=s=>{const date=asDate(s);return [date.getDate(),date.toLocaleDateString('de-DE',{month:'short'}).replace('.',''),date.getFullYear()];};
   if(document.querySelector('[data-events], [data-calendar]')) fetch('events.json').then(r=>{if(!r.ok)throw Error();return r.json();}).then(events=>{
-    document.querySelectorAll('[data-events]').forEach(container=>{container.innerHTML=events.map(event=>{const [day,month,year]=dateParts(event.date);return `<article class="event-row"><time class="datebox" datetime="${escape(event.date)}"><strong>${day}</strong><span>${month}</span><span>${year}</span></time><div><h3>${escape(event.title)}</h3><p>${escape(event.location)}</p><a href="events.html#${escape(event.id)}">Mehr erfahren →</a></div></article>`;}).join('');});
+    document.querySelectorAll('[data-events]').forEach(container=>{if(container.dataset.events==='details'){container.innerHTML=events.map(event=>`<article class="panel content-card event-detail" id="${escape(event.id)}"><time datetime="${escape(event.date)}">${asDate(event.date).toLocaleDateString('de-DE')}</time><h2>${escape(event.title)}</h2><p>${escape(event.location)}</p><a class="btn" href="kontakt.php">Zum Termin nachfragen →</a></article>`).join('');return;}container.innerHTML=events.map(event=>{const [day,month,year]=dateParts(event.date);return `<article class="event-row"><time class="datebox" datetime="${escape(event.date)}"><strong>${day}</strong><span>${month}</span><span>${year}</span></time><div><h3>${escape(event.title)}</h3><p>${escape(event.location)}</p><a href="events.html#${escape(event.id)}">Mehr erfahren →</a></div></article>`;}).join('');});
+    if(location.hash){const target=document.getElementById(decodeURIComponent(location.hash.slice(1)));if(target)target.scrollIntoView();}
     const calendar=document.querySelector('[data-calendar]');if(!calendar)return;
     let view=asDate(events[0]?.date||new Date().toISOString().slice(0,10)),chosen=events[0]?.date||'';
     const grid=calendar.querySelector('.calendar-grid'),heading=calendar.querySelector('[data-month]'),detail=calendar.querySelector('.calendar-detail');
