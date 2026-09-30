@@ -1,0 +1,5 @@
+Options -Indexes
+DirectoryIndex index.html
+<FilesMatch "^(bootstrap\.php|README\.md|GIT-ANLEITUNG\.md|SMTP-EINRICHTUNG\.md|ASSETS\.md|router\.php|\..*)$">
+  Require all denied
+</FilesMatch>

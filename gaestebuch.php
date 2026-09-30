@@ -1,74 +1,27 @@
-<?php require __DIR__ . '/bootstrap.php';
-$status = '';
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!csrf_ok())
-        $status = '<div class="notice error">Ungültige Sitzung. Bitte erneut versuchen.</div>';
-    else {
-        $name = clean($_POST['name'] ?? '');
-        $message = clean($_POST['message'] ?? '');
-        if ($name === '' || mb_strlen($name) > 80 || $message === '' || mb_strlen($message) > 1000)
-            $status = '<div class="notice error">Bitte Name und Nachricht prüfen.</div>';
-        elseif (!empty($_POST['website'] ?? ''))
-            $status = '<div class="notice error">Spam erkannt.</div>';
-        else {
-            $stmt = $db->prepare('INSERT INTO guestbook(name,message,created_at) VALUES(?,?,?)');
-            $stmt->execute([$name, $message, date('Y-m-d H:i:s')]);
-            $status = '<div class="notice success">Danke für deinen Gruß! Der Eintrag wurde gespeichert.</div>';
-        }
-    }
+<?php
+require __DIR__.'/bootstrap.php';
+require __DIR__.'/includes/layout.php';
+if ($_SERVER['REQUEST_METHOD']==='POST') {
+    $name=clean(field('name'));$message=clean(field('message'));
+    $result=['ok'=>false,'message'=>''];
+    if(!csrf_ok())$result['message']='Deine Sitzung ist abgelaufen. Bitte lade die Seite neu.';
+    elseif(!$name||mb_strlen($name)>80||!$message||mb_strlen($message)>1000)$result['message']='Bitte prüfe deinen Namen und deinen Gruß (höchstens 1.000 Zeichen).';
+    elseif(field('privacy')!=='1')$result['message']='Bitte stimme der Veröffentlichung deines Namens und Grußes zu.';
+    elseif(field('website')!=='')$result['message']='Der Eintrag konnte nicht angenommen werden.';
+    elseif(time()-($_SESSION['guest_time']??0)<30)$result['message']='Bitte warte einen Moment, bevor du einen weiteren Gruß hinterlässt.';
+    else {try{database()->prepare('INSERT INTO guestbook(name,message,created_at) VALUES(?,?,?)')->execute([$name,$message,date(DATE_ATOM)]);$_SESSION['guest_time']=time();$result=['ok'=>true,'message'=>'Danke für deinen Gruß! Dein Eintrag wurde veröffentlicht.'];}catch(Throwable $error){$result['message']='Der Eintrag konnte nicht gespeichert werden. Bitte versuche es später erneut.';}}
+    $_SESSION['guest_result']=$result;
+    $_SESSION['guest_values']=$result['ok']?[]:['name'=>$name,'message'=>$message];
+    header('Location: gaestebuch.php',true,303);exit;
 }
-$entries = $db->query('SELECT name,message,created_at FROM guestbook ORDER BY id DESC LIMIT 50')->fetchAll(PDO::FETCH_ASSOC);
+$result=$_SESSION['guest_result']??null;unset($_SESSION['guest_result']);
+$values=$_SESSION['guest_values']??[];unset($_SESSION['guest_values']);
+try{$entries=database()->query('SELECT name,message,created_at FROM guestbook ORDER BY id DESC LIMIT 50')->fetchAll();$available=true;}catch(Throwable $error){$entries=[];$available=false;}
+page_start('Gästebuch');
 ?>
-<?= '<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Gästebuch · Hravenhaim Sippe</title><link rel="stylesheet" href="css/main.css"></head><body>' ?>
-<header class="topbar">
-    <div class="container nav"><a class="brand" href="index.html"><img src="images/logo/hravenhaim-logo.png"
-                onerror="this.src='images/logo/hravenhaim-logo.svg'"><span>HRAVENHAIM<br>SIPPE</span></a><button
-            class="menuBtn">☰</button>
-        <nav class="menu"><a href="index.html">Start</a><a href="koenigspaar.html">Königspaar</a><a
-                href="jarle.html">Jarle</a><a href="events.html">Events</a><a href="galerie.html">Galerie</a><a
-                href="buendnispartner.html">Bündnispartner</a><a href="buchempfehlungen.html">Bücher</a><a
-                class="active" href="gaestebuch.php">Gästebuch</a><a href="kontakt.php">Kontakt</a></nav>
-    </div>
-</header>
-<main>
-    <div class="page-hero">
-        <div class="container">
-            <h1>Gästebuch</h1>
-            <p>Hinterlasse der Hravenhaim Sippe einen Gruß.</p>
-        </div>
-    </div>
-    <section class="section">
-        <div class="container grid grid-2">
-            <div class="card">
-                <h3>Dein Gruß</h3><?= $status ?>
-                <form method="post">
-                    <input type="hidden" name="csrf" value="<?= e($_SESSION['csrf']) ?>">
-                    <div><label>Name</label><input name="name" maxlength="80" required></div>
-                    <div><label>Nachricht</label><textarea name="message" maxlength="1000" required></textarea></div>
-                    <div style="display:none"><label>Website</label><input name="website" autocomplete="off"></div>
-                    <label class="check"><input type="checkbox" required> Ich stimme der Veröffentlichung meines Namens
-                        und meiner Nachricht im Gästebuch zu.</label>
-                    <button class="btn">Gruß hinterlassen</button>
-                </form>
-            </div>
-            <div>
-                <h3 style="font:700 1.2rem Cinzel;color:var(--gold2)">Gästebucheinträge</h3>
-                <?php foreach ($entries as $x): ?>
-                    <div class="guest"><strong><?= e($x['name']) ?></strong><small> ·
-                            <?= e(date('d.m.Y', strtotime($x['created_at']))) ?></small>
-                        <div><?= nl2br(e($x['message'])) ?></div>
-                    </div><?php endforeach; ?>
-                <?php if (!$entries): ?>
-                    <div class="notice">Noch keine Einträge. Sei der Erste!</div><?php endif; ?>
-            </div>
-        </div>
-    </section>
-</main>
-<footer>
-    <div class="container copyright">© <span data-year></span> Hravenhaim Sippe · <a href="impressum.html">Impressum</a>
-        · <a href="datenschutz.html">Datenschutz</a></div>
-</footer>
-<script src="js/main.js"></script>
-</body>
-
-</html>
+<p class="intro">Hinterlasse einen Gruß. Wir freuen uns, dass du hier bist.</p><div class="content-grid two"><section class="panel content-card"><h2>Dein Gruß an die Sippe</h2>
+<?php if($result): ?><p class="notice <?= $result['ok']?'success':'error' ?>" role="status"><?= e($result['message']) ?></p><?php endif; ?>
+<form method="post" action="gaestebuch.php"><input type="hidden" name="csrf" value="<?= e($_SESSION['csrf']) ?>"><label for="guest-name">Name *<input id="guest-name" name="name" maxlength="80" required value="<?= e($values['name']??'') ?>"></label><label for="guest-message">Dein Gruß *<textarea id="guest-message" name="message" maxlength="1000" required><?= e($values['message']??'') ?></textarea></label><div class="honeypot" aria-hidden="true"><label>Website<input name="website" autocomplete="off" tabindex="-1"></label></div><label class="consent"><input type="checkbox" name="privacy" value="1" required> <span>Ich stimme der öffentlichen Anzeige meines Namens und Grußes zu. <a href="datenschutz.html">Datenschutz</a></span></label><button class="btn">Gruß hinterlassen ›</button></form></section><section aria-label="Grüße aus dem Gästebuch">
+<?php foreach($entries as $entry): ?><article class="guest-entry"><h2><?= e($entry['name']) ?></h2><time datetime="<?= e($entry['created_at']) ?>"><?= e(date('d.m.Y',strtotime($entry['created_at']))) ?></time><p><?= e($entry['message']) ?></p></article><?php endforeach; ?>
+<?php if(!$entries): ?><p class="notice"><?= $available?'Noch keine Einträge. Sei der Erste!':'Das Gästebuch ist vorübergehend nicht erreichbar.' ?></p><?php endif; ?></section></div>
+<?php page_end(); ?>
